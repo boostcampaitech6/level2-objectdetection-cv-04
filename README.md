@@ -8,6 +8,13 @@
 - 조성혁
 - 이도형
 
+
+## 재활용 품목 분류를 위한 Object Detection
+
+요즘 쓰레기 관련 문제들이 항상 문제로 떠오르고 있습니다. 이러한 문제를 해결할 수 있는 방법 중 하나는 분리수거를 잘 하는 것입니다. 잘 분리 배출 된 쓰레기는 자원으로서 가치를 인정받아 재활용되지만, 잘못 분리 배출 되면 그대로 폐기물로 분류되어 매립 또는 소각 되기 때문입니다. 따라서 분리 배출을 잘 하기 위해서 이미지에서 쓰레기를 detection하는 모델을 만들어 보려고 합니다. 쓰레기를 잘 detection하는 모델을 만든다면 쓰레기장에 설치되어 정확한 분리수거를 도울 수 있고 어린 아이들의 분리수거 교육에 사용될 수도 있을 것입니다.
+
+이번 프로젝트는 부스트캠프 AI Tech CV 트랙내에서 진행된 대회이며 mAP50으로 최종평가를 진행하게 됩니다.
+
 ## Ground Rules
 ### [Conventional Commits 1.0.0](https://www.conventionalcommits.org/ko/v1.0.0/)
 ```bash
@@ -34,7 +41,6 @@
 ### Github Flow
 
 > It will be updated.
-
 
 ## Requirements
 * Python >= 3.5 (3.6 recommended)
