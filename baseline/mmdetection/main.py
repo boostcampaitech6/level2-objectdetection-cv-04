@@ -23,7 +23,7 @@ def main(args):
             init_kwargs={'project':'level2-object-detection-cv-04',
                             'name':args.wandb_name},
             interval=10,
-            log_checkpoint=True,
+            log_checkpoint=False,
             log_checkpoint_metadata=True,
             num_eval_images=100)
     ]
