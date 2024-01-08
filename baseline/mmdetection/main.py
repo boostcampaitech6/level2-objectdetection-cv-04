@@ -115,17 +115,7 @@ def main(args):
         else:
             submission.to_csv(os.path.join(cfg.work_dir, f'submission_{args.checkpoint}.csv'), index=None)
             submission.head()
-'''
-1. train_fold_1을 학습 시킨다.
-2. val_fold 1으로 mAP 확인
 
-1~2를 각 fold별로 반복
---> 모델 10개
-모델 10개를 모두 test 데이터셋으로 inference
-
-3. train_fold_1으로 학습 시킨 모델로 test 데이터셋 inference(submission)
-4. 리더보드 제출 후 test의 mAP와, Validation set의 mAP 비교. (터무니 없이 차이가 나는지?)
-'''
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
