@@ -200,7 +200,7 @@ if __name__ == "__main__":
     if args.config_dir == None:
         raise Exception("Import config file's location")
     
-    if args.wandb_name == None:
+    if args.train and args.wandb_name == None:
         raise Exception("Import wandb test name")
     
     if args.output == "./work_dirs/default":
