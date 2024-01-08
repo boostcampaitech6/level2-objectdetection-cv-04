@@ -209,7 +209,7 @@ if __name__ == "__main__":
     if args.checkpoint == "latest":
         print("Warning: Your model name is set to (latest). If not intended, change your model name.")
 
-    if not args.train and args.gt_name == None:
+    if not args.train and args.valid and args.gt_name == None:
         raise Exception("Import GT name")
     
     print(args)  # 내가 설정한 augrments
