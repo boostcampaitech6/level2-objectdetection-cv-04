@@ -86,7 +86,7 @@ def main(args):
         coco = COCO(cfg.data.test.ann_file)
 
         class_num = 10
-        for i, out in enumerate(output):
+        for i, out in zip(coco.getImgIds(), output):
             prediction_string = ''
             image_info = coco.loadImgs(coco.getImgIds(imgIds=i))[0]
             for j in range(class_num):
@@ -99,14 +99,14 @@ def main(args):
                         class_id, confidence_score, x_min, y_min, x_max, y_max
                     """
                     prediction_string += str(j) + ' ' + str(o[4]) + ' ' + \
-                                         str(o[0]) + ' ' + str(o[1]) + ' ' + str(o[2]) + ' ' + str(o[3]) + ' '
+                                        str(o[0]) + ' ' + str(o[1]) + ' ' + str(o[2]) + ' ' + str(o[3]) + ' '
                 
             prediction_strings.append(prediction_string)
             file_names.append(image_info['file_name'])
 
-            submission = pd.DataFrame()
-            submission['PredictionString'] = prediction_strings
-            submission['image_id'] = file_names
+        submission = pd.DataFrame()
+        submission['PredictionString'] = prediction_strings
+        submission['image_id'] = file_names
 
         if args.valid:
             mean_ap, average_precisions = meanAveragePrecision(submission, args)
@@ -188,13 +188,6 @@ if __name__ == "__main__":
         help="name of checkpoint want to inference"
     )
     
-    # ground truth name
-    parser.add_argument(
-        "--gt_name",
-        type=str,
-        default=None,
-        help="name of Ground Truth name"
-    )
     args = parser.parse_args()   
 
     if args.config_dir == None:
@@ -208,9 +201,6 @@ if __name__ == "__main__":
     
     if args.checkpoint == "latest":
         print("Warning: Your model name is set to (latest). If not intended, change your model name.")
-
-    if not args.train and args.valid and args.gt_name == None:
-        raise Exception("Import GT name")
     
     print(args)  # 내가 설정한 augrments
     main(args)

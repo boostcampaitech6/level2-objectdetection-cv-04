@@ -1,6 +1,5 @@
 from map_boxes import mean_average_precision_for_boxes
 from pycocotools.coco import COCO
-import tqdm
 import numpy as np
 def meanAveragePrecision(submission, args):
     new_pred = []
@@ -11,7 +10,7 @@ def meanAveragePrecision(submission, args):
         if isinstance(bbox, float):
             print(f'{file_names[i]} empty box')
 
-    for file_name, bbox in tqdm(zip(file_names, bboxes)):
+    for file_name, bbox in zip(file_names, bboxes):
         boxes = np.array(str(bbox).strip().split(' '))
 
         # boxes - class ID confidence score xmin ymin xmax ymax
@@ -27,7 +26,7 @@ def meanAveragePrecision(submission, args):
             new_pred.append([file_name, box[0], box[1], float(box[2]), float(box[4]), float(box[3]), float(box[5])])
 
     gt = []
-    coco = COCO(args.root + args.gt_name)
+    coco = COCO(args.root + args.annotation)
     image_infos = coco.loadImgs(coco.getImgIds())
     for image_info in image_infos:
         annIds = coco.getAnnIds(imgIds = image_info['id'])
