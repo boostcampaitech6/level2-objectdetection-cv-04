@@ -47,6 +47,7 @@ def main(args):
         model.init_weights()
         train_detector(model, datasets[0], cfg, distributed=False, validate=False)
     else:  # test(inference) mode
+        cfg.data.test.img_prefix = args.root
         cfg.data.test.ann_file = args.root + args.annotation # test.json 정보
         cfg.data.test.test_mode = True
 
