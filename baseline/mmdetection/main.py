@@ -17,13 +17,10 @@ import pandas as pd
 from metrics import meanAveragePrecision
 
 def main(args):
-    classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass", 
-           "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
     # Config file 들고오기
     cfg = Config.fromfile(args.config_dir)
-    
     cfg.work_dir = args.output
-
+    
     if args.train:  # train mode
         # wandb를 사용하기 위한 hook 설정
         cfg.log_config.hooks = [
@@ -33,34 +30,23 @@ def main(args):
                                 'name':args.wandb_name},
                 interval=10,
                 log_checkpoint=False,
-                log_checkpoint_metadata=True,
-                num_eval_images=100)
-        ]
-        try:
-            cfg.data.train.classes = classes
-            cfg.data.train.img_prefix = args.root
-            cfg.data.train.ann_file = args.root + args.annotation # train json 정보
-        except:
-            cfg.data.train.dataset.classes = classes
-            cfg.data.train.dataset.img_prefix = args.root
-            cfg.data.train.dataset.ann_file = args.root + args.annotation # train json 정보
-
+                log_checkpoint_metadata=True
+                )
+        ]  # num_eval_images=100
         
+        # dataset directory
+        cfg.data.train.img_prefix = args.root
+        cfg.data.train.ann_file = args.root + args.annotation # train json 정보
         cfg.device = get_device()
-
+        
         # build_dataset
         datasets = [build_dataset(cfg.data.train)]
-
+        
         # 모델 build 및 pretrained network 불러오기
         model = build_detector(cfg.model)
         model.init_weights()
-
         train_detector(model, datasets[0], cfg, distributed=False, validate=False)
-    
     else:  # test(inference) mode
-
-        cfg.data.test.classes = classes
-        cfg.data.test.img_prefix = args.root
         cfg.data.test.ann_file = args.root + args.annotation # test.json 정보
         cfg.data.test.test_mode = True
 
