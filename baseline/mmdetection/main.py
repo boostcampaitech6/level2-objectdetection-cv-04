@@ -16,18 +16,6 @@ from metrics import meanAveragePrecision, confusion_matrix
 
 
 def main(args):
-    classes = (
-        "General trash",
-        "Paper",
-        "Paper pack",
-        "Metal",
-        "Glass",
-        "Plastic",
-        "Styrofoam",
-        "Plastic bag",
-        "Battery",
-        "Clothing",
-    )
     # Config file 들고오기
     cfg = Config.fromfile(args.config_dir)
 
@@ -49,16 +37,9 @@ def main(args):
                 num_eval_images=100,
             ),
         ]
-        try:
-            cfg.data.train.classes = classes
-            cfg.data.train.img_prefix = args.root
-            cfg.data.train.ann_file = args.root + args.annotation  # train json 정보
-        except:
-            cfg.data.train.dataset.classes = classes
-            cfg.data.train.dataset.img_prefix = args.root
-            cfg.data.train.dataset.ann_file = (
-                args.root + args.annotation
-            )  # train json 정보
+
+        cfg.data.train.img_prefix = args.root
+        cfg.data.train.ann_file = args.root + args.annotation  # train json 정보
 
         cfg.device = get_device()
 
@@ -72,7 +53,6 @@ def main(args):
         train_detector(model, datasets[0], cfg, distributed=False, validate=False)
 
     else:  # test(inference) mode
-        cfg.data.test.classes = classes
         cfg.data.test.img_prefix = args.root
         cfg.data.test.ann_file = args.root + args.annotation  # test.json 정보
         cfg.data.test.test_mode = True
