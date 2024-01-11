@@ -2,6 +2,7 @@
 dataset_type = "CocoDataset"
 data_root = "../../dataset/"
 
+custom_imports = dict(imports=['mmdet.engine.hooks.submission_hook'], allow_failed_imports=False)
 custom_hooks = [
     dict(type='SubmissionHook'),
 ]
