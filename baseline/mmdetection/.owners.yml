@@ -2,11 +2,12 @@ assign:
   strategy:
     # random
     daily-shift-based
-  scedule: "*/1 * * * *"
+  scedule:
+    '*/1 * * * *'
   assignees:
     - Czm369
     - hhaAndroid
-    - wanghonglie
+    - jbwang1997
     - RangiLyu
     - BIGWangYuDong
     - chhluo
