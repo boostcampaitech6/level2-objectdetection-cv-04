@@ -2,6 +2,10 @@
 dataset_type = "CocoDataset"
 data_root = "../../dataset/"
 
+custom_hooks = [
+    dict(type='SubmissionHook'),
+]
+
 # Example to use different file client
 # Method 1: simply set the data root and let the file I/O module
 # automatically infer from prefix (not support LMDB and Memcache yet)

@@ -1,136 +1,133 @@
 # Import module
 import os
+import os.path as osp
 import argparse
-from mmcv import Config
-from mmdet.datasets import build_dataset
-from mmdet.models import build_detector
-from mmdet.apis import train_detector
-from mmdet.datasets import build_dataloader, build_dataset, replace_ImageToTensor
-from mmdet.utils import get_device
-from mmdet.apis import single_gpu_test
-from mmcv.runner import load_checkpoint
-from mmcv.parallel import MMDataParallel
-from pycocotools.coco import COCO
-import pandas as pd
-from metrics import meanAveragePrecision, confusion_matrix
+# from mmdet.apis import single_gpu_test
+# from mmcv.runner import load_checkpoint
+# from mmcv.parallel import MMDataParallel
+# from pycocotools.coco import COCO
+# import pandas as pd
+# from metrics import meanAveragePrecision, confusion_matrix
+
+from mmengine.config import Config, DictAction
+from mmengine.registry import RUNNERS
+from mmengine.runner import Runner
+
+from mmdet.utils import setup_cache_size_limit_of_dynamo
 
 
 def main(args):
-    # Config file 들고오기
+    # config file 들고오기
     cfg = Config.fromfile(args.config_dir)
 
     cfg.work_dir = args.output
-
+    
     if args.train:  # train mode
         # wandb를 사용하기 위한 hook 설정
-        cfg.log_config.hooks = [
-            dict(type="TextLoggerHook"),
+        cfg.visualizer.vis_backends=[
             dict(
-                type="MMDetWandbHook",
-                init_kwargs={
-                    "project": "level2-object-detection-cv-04",
-                    "name": args.wandb_name,
-                },
-                interval=10,
-                log_checkpoint=False,
-                log_checkpoint_metadata=True,
-                num_eval_images=100,
-            ),
-        ]
+                type='WandbVisBackend', 
+                init_kwargs=dict(
+                    project='level2-object-detection-cv-04',
+                    name=args.wandb_name),
+                )
+            ]
+        
+        cfg.data_root = args.root
+        cfg.train_dataloader.dataset.data_prefix = dict(img="")
+        cfg.train_dataloader.dataset.ann_file = args.annotation  # train json 정보
+        cfg.val_dataloader.dataset.data_prefix = dict(img="")
+        cfg.val_dataloader.dataset.ann_file = args.valid_annotation  # validation json 정보
 
-        cfg.data.train.img_prefix = args.root
-        cfg.data.train.ann_file = args.root + args.annotation  # train json 정보
-        cfg.data.val.img_prefix = args.root
-        cfg.data.val.ann_file = args.root + args.annotation  # validation json 정보
-
-        cfg.device = get_device()
-
-        # build_dataset
-        datasets = [build_dataset(cfg.data.train)]
-
-        # 모델 build 및 pretrained network 불러오기
-        model = build_detector(cfg.model)
-        model.init_weights()
-
-        train_detector(model, datasets[0], cfg, distributed=False, validate=True)
-
-    else:  # test(inference) mode
-        cfg.data.test.img_prefix = args.root
-        cfg.data.test.ann_file = args.root + args.annotation  # test.json 정보
-        cfg.data.test.test_mode = True
-
-        # build dataset & dataloader
-        dataset = build_dataset(cfg.data.test)
-        data_loader = build_dataloader(
-            dataset,
-            samples_per_gpu=1,
-            workers_per_gpu=cfg.data.workers_per_gpu,
-            dist=False,
-            shuffle=False,
-        )
-
-        # checkpoint path
-        checkpoint_path = os.path.join(cfg.work_dir, f"{args.checkpoint}.pth")
-        model = build_detector(
-            cfg.model, test_cfg=cfg.get("test_cfg")
-        )  # build detector
-        checkpoint = load_checkpoint(
-            model, checkpoint_path, map_location="cpu"
-        )  # ckpt load
-        model.CLASSES = dataset.CLASSES
-        model = MMDataParallel(model.cuda(), device_ids=[0])
-        output = single_gpu_test(model, data_loader, show_score_thr=0.05)  # output 계산
-
-        prediction_strings = []
-        file_names = []
-        coco = COCO(cfg.data.test.ann_file)
-
-        class_num = 10
-        for i, out in zip(coco.getImgIds(), output):
-            prediction_string = ""
-            image_info = coco.loadImgs(coco.getImgIds(imgIds=i))[0]
-            for j in range(class_num):
-                for o in out[j]:
-                    """
-                    기존 out: shape: (5,)
-                        x_min, y_min, x_max, y_max, confidence_score
-
-                    -out -> prediction_string 재구성-
-                        class_id, confidence_score, x_min, y_min, x_max, y_max
-                    """
-                    prediction_string += (
-                        str(j)
-                        + " "
-                        + str(o[4])
-                        + " "
-                        + str(o[0])
-                        + " "
-                        + str(o[1])
-                        + " "
-                        + str(o[2])
-                        + " "
-                        + str(o[3])
-                        + " "
-                    )
-
-            prediction_strings.append(prediction_string)
-            file_names.append(image_info["file_name"])
-
-        submission = pd.DataFrame()
-        submission["PredictionString"] = prediction_strings
-        submission["image_id"] = file_names
-
-        if args.valid:
-            mAP = meanAveragePrecision(submission, args)
-            conf_matrix = confusion_matrix(submission, args)
-            print(f"mAP(mean Average Precision): {mAP}")
-            print(conf_matrix)
+        # build the runner from config
+        if 'runner_type' not in cfg:
+            # build the default runner
+            runner = Runner.from_cfg(cfg)
         else:
-            submission.to_csv(
-                os.path.join(cfg.work_dir, f"submission_{args.checkpoint}.csv"),
-                index=None,
-            )
-            submission.head()
+            # build customized runner from the registry
+            # if 'runner_type' is set in the cfg
+            runner = RUNNERS.build(cfg)
+
+        # start training
+        runner.train()
+
+    # else:  # test(inference) mode
+    #     cfg.data.test.img_prefix = args.root
+    #     cfg.data.test.ann_file = args.root + args.annotation  # test.json 정보
+    #     cfg.data.test.test_mode = True
+
+    #     # build dataset & dataloader
+    #     dataset = build_dataset(cfg.data.test)
+    #     data_loader = build_dataloader(
+    #         dataset,
+    #         samples_per_gpu=1,
+    #         workers_per_gpu=cfg.data.workers_per_gpu,
+    #         dist=False,
+    #         shuffle=False,
+    #     )
+
+    #     # checkpoint path
+    #     checkpoint_path = os.path.join(cfg.work_dir, f"{args.checkpoint}.pth")
+    #     model = build_detector(
+    #         cfg.model, test_cfg=cfg.get("test_cfg")
+    #     )  # build detector
+    #     checkpoint = load_checkpoint(
+    #         model, checkpoint_path, map_location="cpu"
+    #     )  # ckpt load
+    #     model.CLASSES = dataset.CLASSES
+    #     model = MMDataParallel(model.cuda(), device_ids=[0])
+    #     output = single_gpu_test(model, data_loader, show_score_thr=0.05)  # output 계산
+
+    #     prediction_strings = []
+    #     file_names = []
+    #     coco = COCO(cfg.data.test.ann_file)
+
+    #     class_num = 10
+    #     for i, out in zip(coco.getImgIds(), output):
+    #         prediction_string = ""
+    #         image_info = coco.loadImgs(coco.getImgIds(imgIds=i))[0]
+    #         for j in range(class_num):
+    #             for o in out[j]:
+    #                 """
+    #                 기존 out: shape: (5,)
+    #                     x_min, y_min, x_max, y_max, confidence_score
+
+    #                 -out -> prediction_string 재구성-
+    #                     class_id, confidence_score, x_min, y_min, x_max, y_max
+    #                 """
+    #                 prediction_string += (
+    #                     str(j)
+    #                     + " "
+    #                     + str(o[4])
+    #                     + " "
+    #                     + str(o[0])
+    #                     + " "
+    #                     + str(o[1])
+    #                     + " "
+    #                     + str(o[2])
+    #                     + " "
+    #                     + str(o[3])
+    #                     + " "
+    #                 )
+
+    #         prediction_strings.append(prediction_string)
+    #         file_names.append(image_info["file_name"])
+
+    #     submission = pd.DataFrame()
+    #     submission["PredictionString"] = prediction_strings
+    #     submission["image_id"] = file_names
+
+    #     if args.valid:
+    #         mAP = meanAveragePrecision(submission, args)
+    #         conf_matrix = confusion_matrix(submission, args)
+    #         print(f"mAP(mean Average Precision): {mAP}")
+    #         print(conf_matrix)
+    #     else:
+    #         submission.to_csv(
+    #             os.path.join(cfg.work_dir, f"submission_{args.checkpoint}.csv"),
+    #             index=None,
+    #         )
+    #         submission.head()
 
 
 if __name__ == "__main__":
@@ -147,7 +144,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--annotation",
         type=str,
-        default="train.json",
+        default="k-fold/train_fold_7.json",
+        help="annotation file name (default: train.json)",
+    )
+    parser.add_argument(
+        "--valid_annotation",
+        type=str,
+        default="k-fold/val_fold_7.json",
         help="annotation file name (default: train.json)",
     )
     # output 위치
