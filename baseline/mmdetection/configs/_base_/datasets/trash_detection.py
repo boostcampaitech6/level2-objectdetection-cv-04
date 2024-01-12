@@ -50,8 +50,8 @@ metainfo = {
 }
 
 train_dataloader = dict(
-    batch_size=2,
-    num_workers=2,
+    batch_size=4,
+    num_workers=4,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
     batch_sampler=dict(type='AspectRatioBatchSampler'),
@@ -64,9 +64,10 @@ train_dataloader = dict(
         filter_cfg=dict(filter_empty_gt=True, min_size=32),
         pipeline=train_pipeline,
         backend_args=backend_args))
+
 val_dataloader = dict(
-    batch_size=1,
-    num_workers=2,
+    batch_size=4,
+    num_workers=4,
     persistent_workers=True,
     drop_last=False,
     sampler=dict(type='DefaultSampler', shuffle=False),
@@ -79,15 +80,36 @@ val_dataloader = dict(
         test_mode=True,
         pipeline=test_pipeline,
         backend_args=backend_args))
-test_dataloader = val_dataloader
+
+test_dataloader = dict(
+    batch_size=4,
+    num_workers=4,
+    persistent_workers=True,
+    drop_last=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type=dataset_type,
+        data_root=data_root,
+        metainfo=metainfo,
+        ann_file="test.json",
+        data_prefix=dict(img=""),
+        test_mode=True,
+        pipeline=test_pipeline,
+        backend_args=backend_args))
 
 val_evaluator = dict(
     type='CocoMetric',
-    ann_file=data_root + "clean.json",
+    ann_file=data_root + "k-fold/val_fold_7.json",
     metric='bbox',
     format_only=False,
     backend_args=backend_args)
-test_evaluator = val_evaluator
+
+test_evaluator = dict(
+    type='CocoMetric',
+    ann_file=data_root + "test.json",
+    metric='bbox',
+    format_only=True,
+    backend_args=backend_args)
 
 # inference on test dataset and
 # format the output results for submission.
