@@ -2,7 +2,7 @@
 import argparse
 import os.path as osp
 import json
-import mmcv
+import mmengine
 import numpy as np
 import os
 
@@ -25,7 +25,7 @@ def parse_args():
         '--out-dir',
         type=str,
         help='The output directory for K-fold split annotations.',
-        default='/data/ephemeral/home/dataset/k-fold/')
+        default='/data/ephemeral/home/dataset/k-fold-final/')
     parser.add_argument(
         '--fold',
         type=int,
@@ -51,8 +51,8 @@ def extract_labels_and_groups(data):
 # 주석 파일을 저장하기 위한 함수입니다
 def save_anns(name, images, annotations, original_data, out_dir):
     sub_anns = {'images': images, 'annotations': annotations, 'licenses': original_data['licenses'], 'categories': original_data['categories'], 'info': original_data['info']}
-    mmcv.mkdir_or_exist(out_dir)
-    mmcv.dump(sub_anns, os.path.join(out_dir, name))
+    mmengine.mkdir_or_exist(out_dir)
+    mmengine.dump(sub_anns, os.path.join(out_dir, name))
 
 # Stratified Group K-Fold를 사용하여 데이터셋을 분할하고 저장하는 함수입니다
 def stratified_group_kfold_split(data, out_dir, fold):
@@ -69,6 +69,6 @@ def stratified_group_kfold_split(data, out_dir, fold):
 
 if __name__ == '__main__':
     args = parse_args()
-    with open(os.path.join(args.data_root, 'clean.json')) as f:
+    with open(os.path.join(args.data_root, 'clean-final.json')) as f:
         data = json.load(f)
     stratified_group_kfold_split(data, args.out_dir, args.fold)
