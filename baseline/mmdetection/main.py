@@ -36,7 +36,7 @@ def main(args):
             ]
         
         # enable automatic-mixed-precision training
-        if args.amp is True:
+        if args.amp:
             cfg.optim_wrapper.type = 'AmpOptimWrapper'
             cfg.optim_wrapper.loss_scale = 'dynamic'
             
@@ -73,8 +73,8 @@ if __name__ == "__main__":
     # amp 사용여부 (default=False)
     parser.add_argument(
         '--amp',
-        action='store_true',
-        default=False,
+        type=int,
+        default=0,
         help='enable automatic-mixed-precision training')
     # 사전학습 가중치 가져오기
     parser.add_argument(
