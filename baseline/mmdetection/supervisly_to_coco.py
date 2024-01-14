@@ -36,6 +36,7 @@ def convert(args):
             start_image_id = json_data["images"][0]["id"]
             for i in range(len(json_data["images"])):
                 json_data["images"][i]["id"] -= start_image_id
+                json_data["images"][i]["file_name"] = "train/"+json_data["images"][i]["file_name"]
 
             # make category id start from 0
             for i in range(len(json_data["categories"])):
@@ -62,6 +63,7 @@ def convert(args):
 
     with open(out_path, "w") as file:
         json.dump(new_json_data, file, indent=2)
+    print(f"done, {out_path}")
 
 
 if __name__ == "__main__":
