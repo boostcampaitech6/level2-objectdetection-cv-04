@@ -1,17 +1,59 @@
 # AI Tech 6기 Team 아웃라이어
 
 ## Members
-- 강승환
-- 김승민
-- 설훈
-- 전병관
-- 조성혁
-- 이도형
-
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/kangshwan">
+        <img src="https://imgur.com/ozd1yor.jpg" width="100" height="100" /><br>
+        강승환
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/viitamin">
+        <img src="https://imgur.com/GXteBDS.jpg" width="100" height="100" /><br>
+        김승민
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/tjfgns6043">
+        <img src="https://imgur.com/aMVcwCF.jpg" width="100" height="100" /><br>
+        설훈
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/leedohyeong">
+        <img src="https://imgur.com/F6ZfcEl.jpg" width="100" height="100" /><br>
+        이도형
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/wjsqudrhks">
+        <img src="https://imgur.com/ZSVCV82.jpg" width="100" height="100" /><br>
+        전병관
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/seonghyeokcho">
+        <img src="https://imgur.com/GBdY0k4.jpg" width="100" height="100" /><br>
+        조성혁
+      </a>
+    </td>
+  </tr>
+</table>
 
 ## 재활용 품목 분류를 위한 Object Detection
 
-요즘 쓰레기 관련 문제들이 항상 문제로 떠오르고 있습니다. 이러한 문제를 해결할 수 있는 방법 중 하나는 분리수거를 잘 하는 것입니다. 잘 분리 배출 된 쓰레기는 자원으로서 가치를 인정받아 재활용되지만, 잘못 분리 배출 되면 그대로 폐기물로 분류되어 매립 또는 소각 되기 때문입니다. 따라서 분리 배출을 잘 하기 위해서 이미지에서 쓰레기를 detection하는 모델을 만들어 보려고 합니다. 쓰레기를 잘 detection하는 모델을 만든다면 쓰레기장에 설치되어 정확한 분리수거를 도울 수 있고 어린 아이들의 분리수거 교육에 사용될 수도 있을 것입니다.
+바야흐로 대량 생산, 대량 소비의 시대. 우리는 많은 물건이 대량으로 생산되고, 소비되는 시대를 살고 있습니다. 하지만 이러한 문화는 '쓰레기 대란', '매립지 부족'과 같은 여러 사회 문제를 낳고 있습니다.
+
+![쓰레기 재활용품 사진](https://imgur.com/ldk2oSk.jpg)
+
+
+분리수거는 이러한 환경 부담을 줄일 수 있는 방법 중 하나입니다. 잘 분리배출 된 쓰레기는 자원으로서 가치를 인정받아 재활용되지만, 잘못 분리배출 되면 그대로 폐기물로 분류되어 매립 또는 소각되기 때문입니다.
+
+따라서 우리는 사진에서 쓰레기를 Detection 하는 모델을 만들어 이러한 문제점을 해결해보고자 합니다. 문제 해결을 위한 데이터셋으로는 일반 쓰레기, 플라스틱, 종이, 유리 등 10 종류의 쓰레기가 찍힌 사진 데이터셋이 제공됩니다.
+
+여러분에 의해 만들어진 우수한 성능의 모델은 쓰레기장에 설치되어 정확한 분리수거를 돕거나, 어린아이들의 분리수거 교육 등에 사용될 수 있을 것입니다. 부디 지구를 위기로부터 구해주세요! 🌎
 
 이번 프로젝트는 부스트캠프 AI Tech CV 트랙내에서 진행된 대회이며 mAP50으로 최종평가를 진행하게 됩니다.
 
@@ -38,250 +80,70 @@
   - test : 테스트 코드 추가/수정
   - release : 버전 릴리즈
 
-### Github Flow
-
-> It will be updated.
-
 ## Requirements
-* Python >= 3.5 (3.6 recommended)
-* PyTorch >= 0.4 (1.2 recommended)
-* tqdm (Optional for `test.py`)
-* tensorboard >= 1.14 (see [Tensorboard Visualization](#tensorboard-visualization))
-
-## Features
-* Clear folder structure which is suitable for many deep learning projects.
-* `.json` config file support for convenient parameter tuning.
-* Customizable command line options for more convenient parameter tuning.
-* Checkpoint saving and resuming.
-* Abstract base classes for faster development:
-  * `BaseTrainer` handles checkpoint saving/resuming, training process logging, and more.
-  * `BaseDataLoader` handles batch generation, data shuffling, and validation data splitting.
-  * `BaseModel` provides basic model summary.
+* Python >= 3.10.13
+* PyTorch >= 1.12.1
+* mmcv-full >= 1.6.2
 
 ## Folder Structure
   ```
-  pytorch-template/
-  │
-  ├── train.py - main script to start training
-  ├── test.py - evaluation of trained model
-  │
-  ├── config.json - holds configuration for training
-  ├── parse_config.py - class to handle config file and cli options
-  │
-  ├── new_project.py - initialize new project with template files
-  │
-  ├── base/ - abstract base classes
-  │   ├── base_data_loader.py
-  │   ├── base_model.py
-  │   └── base_trainer.py
-  │
-  ├── data_loader/ - anything about data loading goes here
-  │   └── data_loaders.py
-  │
-  ├── data/ - default directory for storing input data
-  │
-  ├── model/ - models, losses, and metrics
-  │   ├── model.py
-  │   ├── metric.py
-  │   └── loss.py
-  │
-  ├── saved/
-  │   ├── models/ - trained models are saved here
-  │   └── log/ - default logdir for tensorboard and logging output
-  │
-  ├── trainer/ - trainers
-  │   └── trainer.py
-  │
-  ├── logger/ - module for tensorboard visualization and logging
-  │   ├── visualization.py
-  │   ├── logger.py
-  │   └── logger_config.json
-  │  
-  └── utils/ - small utility functions
-      ├── util.py
-      └── ...
+baseline
+├── EDA
+│   └── eda.ipynb
+│   
+├── mmdetection
+│   ├── configs
+|   │   └── Outliers
+|   ├── work_dirs                                     #체크포인트가 저장되는 폴더입니다.
+|   ├── experient_mmdetection_v3.ipynb
+|   ├── gradcam-faster-rcnn-C4-proposal.ipynb
+│   ├── metrics.py
+│   ├── supervisly_to_coco.py
+│   ├── StratifiedGroupKFold.py
+│   └── main.py
+│
+├── requirements.txt
   ```
+## Dataset
+- Total Images : 9754장 (train : 4883, test : 4871)
+- 10 Class : General trash, Paper, Paper pack, Metal, Glass, Plastic, Styrofoam, Plastic bag, Battery, Clothing
+- Image Size : (1024, 1024)
+- COCO Format
 
-## Usage
-Try `python train.py -c config.json` to run code.
+## Main Script('main.py')
+- main.py에서는 제공된 config를 바탕으로 훈련 환경을 설정하고, 모델, 데이터셋, 그리고 train/test 절차를 초기화합니다.
 
-### Config file format
-Config files are in `.json` format.
-Add addional configurations if you need.
+### 주요 특징
+- '--amp' : 혼합 정밀도 훈련을 설정하는 config로 default값은 0으로 0을 제외한 값을 사용시 amp를 적용합니다.
+- '--root', '--annotation', '--valid_annotation' : 데이터셋 경로와 어노테이션 경로를 설정합니다.
+- '--output' : 실험 결과를 저장할 디렉토리를 지정합니다.
+- '--load_from' : 사전 훈련된 모델이나 특정 checkpoint를 불러옵니다.
+- '--wandb_name' : wandb사용시 name을 지정해줍니다.
 
-### Using config files
-Modify the configurations in `.json` config files, then run:
+## Using Shell Script
+```
+ROOT="path/to/dataset/"
+ANNOTATION="your_annotation.json"
+VALID_ANNOTATION="your_validation_annotation.json"
+OUTPUT="path/to/output_directory"
+AMP=0  # 혼합 정밀도 훈련을 위해 1로 설정
+LOAD_FROM="path/to/pretrained_model_or_checkpoint"
+TRAIN=1  # 추론을 위해 0으로 설정
+CONFIG_DIR="path/to/your_config_file.py"
+WANDB_NAME="YourExperimentName"
 
-  ```
-  python train.py --config config.json
-  ```
-
-### Resuming from checkpoints
-You can resume from a previously saved checkpoint by:
-
-  ```
-  python train.py --resume path/to/checkpoint
-  ```
-
-### Using Multiple GPU
-You can enable multi-GPU training by setting `n_gpu` argument of the config file to larger number.
-If configured to use smaller number of gpu than available, first n devices will be used by default.
-Specify indices of available GPUs by cuda environmental variable.
-  ```
-  python train.py --device 2,3 -c config.json
-  ```
-  This is equivalent to
-  ```
-  CUDA_VISIBLE_DEVICES=2,3 python train.py -c config.py
-  ```
-
-## Customization
-
-### Project initialization
-Use the `new_project.py` script to make your new project directory with template files.
-`python new_project.py ../NewProject` then a new project folder named 'NewProject' will be made.
-This script will filter out unneccessary files like cache, git files or readme file. 
-
-### Custom CLI options
-
-Changing values of config file is a clean, safe and easy way of tuning hyperparameters. However, sometimes
-it is better to have command line options if some values need to be changed too often or quickly.
-
-This template uses the configurations stored in the json file by default, but by registering custom options as follows
-you can change some of them using CLI flags.
-
-  ```python
-  # simple class-like object having 3 attributes, `flags`, `type`, `target`.
-  CustomArgs = collections.namedtuple('CustomArgs', 'flags type target')
-  options = [
-      CustomArgs(['--lr', '--learning_rate'], type=float, target=('optimizer', 'args', 'lr')),
-      CustomArgs(['--bs', '--batch_size'], type=int, target=('data_loader', 'args', 'batch_size'))
-      # options added here can be modified by command line flags.
-  ]
-  ```
-`target` argument should be sequence of keys, which are used to access that option in the config dict. In this example, `target` 
-for the learning rate option is `('optimizer', 'args', 'lr')` because `config['optimizer']['args']['lr']` points to the learning rate.
-`python train.py -c config.json --bs 256` runs training with options given in `config.json` except for the `batch size`
-which is increased to 256 by command line options.
-
-
-### Data Loader
-* **Writing your own data loader**
-
-1. **Inherit ```BaseDataLoader```**
-
-    `BaseDataLoader` is a subclass of `torch.utils.data.DataLoader`, you can use either of them.
-
-    `BaseDataLoader` handles:
-    * Generating next batch
-    * Data shuffling
-    * Generating validation data loader by calling
-    `BaseDataLoader.split_validation()`
-
-* **DataLoader Usage**
-
-  `BaseDataLoader` is an iterator, to iterate through batches:
-  ```python
-  for batch_idx, (x_batch, y_batch) in data_loader:
-      pass
-  ```
-* **Example**
-
-  Please refer to `data_loader/data_loaders.py` for an MNIST data loading example.
-
-### Trainer
-* **Writing your own trainer**
-
-1. **Inherit ```BaseTrainer```**
-
-    `BaseTrainer` handles:
-    * Training process logging
-    * Checkpoint saving
-    * Checkpoint resuming
-    * Reconfigurable performance monitoring for saving current best model, and early stop training.
-      * If config `monitor` is set to `max val_accuracy`, which means then the trainer will save a checkpoint `model_best.pth` when `validation accuracy` of epoch replaces current `maximum`.
-      * If config `early_stop` is set, training will be automatically terminated when model performance does not improve for given number of epochs. This feature can be turned off by passing 0 to the `early_stop` option, or just deleting the line of config.
-
-2. **Implementing abstract methods**
-
-    You need to implement `_train_epoch()` for your training process, if you need validation then you can implement `_valid_epoch()` as in `trainer/trainer.py`
-
-* **Example**
-
-  Please refer to `trainer/trainer.py` for MNIST training.
-
-* **Iteration-based training**
-
-  `Trainer.__init__` takes an optional argument, `len_epoch` which controls number of batches(steps) in each epoch.
-
-### Model
-* **Writing your own model**
-
-1. **Inherit `BaseModel`**
-
-    `BaseModel` handles:
-    * Inherited from `torch.nn.Module`
-    * `__str__`: Modify native `print` function to prints the number of trainable parameters.
-
-2. **Implementing abstract methods**
-
-    Implement the foward pass method `forward()`
-
-* **Example**
-
-  Please refer to `model/model.py` for a LeNet example.
-
-### Loss
-Custom loss functions can be implemented in 'model/loss.py'. Use them by changing the name given in "loss" in config file, to corresponding name.
-
-### Metrics
-Metric functions are located in 'model/metric.py'.
-
-You can monitor multiple metrics by providing a list in the configuration file, e.g.:
-  ```json
-  "metrics": ["accuracy", "top_k_acc"],
-  ```
-
-### Additional logging
-If you have additional information to be logged, in `_train_epoch()` of your trainer class, merge them with `log` as shown below before returning:
-
-  ```python
-  additional_log = {"gradient_norm": g, "sensitivity": s}
-  log.update(additional_log)
-  return log
-  ```
-
-### Testing
-You can test trained model by running `test.py` passing path to the trained checkpoint by `--resume` argument.
-
-### Validation data
-To split validation data from a data loader, call `BaseDataLoader.split_validation()`, then it will return a data loader for validation of size specified in your config file.
-The `validation_split` can be a ratio of validation set per total data(0.0 <= float < 1.0), or the number of samples (0 <= int < `n_total_samples`).
-
-**Note**: the `split_validation()` method will modify the original data loader
-**Note**: `split_validation()` will return `None` if `"validation_split"` is set to `0`
-
-### Checkpoints
-You can specify the name of the training session in config files:
-  ```json
-  "name": "MNIST_LeNet",
-  ```
-
-The checkpoints will be saved in `save_dir/name/timestamp/checkpoint_epoch_n`, with timestamp in mmdd_HHMMSS format.
-
-A copy of config file will be saved in the same folder.
-
-**Note**: checkpoints contain:
-  ```python
-  {
-    'arch': arch,
-    'epoch': epoch,
-    'state_dict': self.model.state_dict(),
-    'optimizer': self.optimizer.state_dict(),
-    'monitor_best': self.mnt_best,
-    'config': self.config
-  }
-  ```
+python main.py \
+--root ${ROOT} \
+--annotation ${ANNOTATION} \
+--valid_annotation ${VALID_ANNOTATION} \
+--output ${OUTPUT} \
+--amp ${AMP} \
+--load_from ${LOAD_FROM} \
+--train ${TRAIN} \
+--config_dir ${CONFIG_DIR} \
+--wandb_name ${WANDB_NAME}
+```
+다음과 같은 쉘 스크립트를 사용하여 실험을 진행합니다.
 
 ### Wandb Visualization
 This template supports Wandb visualization by using [Wandb](https://github.com/wandb/wandb) library.
@@ -300,28 +162,16 @@ pip install wandb
 
 3. Third, log into W&B:
 
-```python
-wandb.login()
+```bash
+wandb init
 ```
 
-4. Use the example code snippet below as a template to integrate W&B to your Python script:
-
-```python
-import wandb
-
-# Start a W&B Run with wandb.init
-run = wandb.init(project="my_first_project")
-
-# Save model inputs and hyperparameters in a wandb.config object
-config = run.config
-config.learning_rate = 0.01
-
-# Model training code here ...
-
-# Log metrics over time to visualize performance with wandb.log
-for i in range(10):
-    run.log({"loss": loss})
+4. Setting WANDB_NAME of Shell Script and enjoy
+```train.sh
+WANDB_NAME="YourExperimentName"
 ```
+
+
 
 That's it! Navigate to the W&B App to view a dashboard of your first W&B Experiment. Use the W&B App to compare multiple experiments in a unified place, dive into the results of a single run, and much more!
 
@@ -334,16 +184,3 @@ Example W&B Dashboard that shows Runs from an Experiment.
 
 &nbsp;
 
-## Contribution
-
-- 
-
-## TODOs
-
-- [ ] 
-
-## License
-This project is licensed under the MIT License. See  LICENSE for more details
-
-## Acknowledgements
-This project is inspired by the project [Tensorflow-Project-Template](https://github.com/MrGemy95/Tensorflow-Project-Template) by [Mahmoud Gemy](https://github.com/MrGemy95)
