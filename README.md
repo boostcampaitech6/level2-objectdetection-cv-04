@@ -57,6 +57,15 @@
 
 이번 프로젝트는 부스트캠프 AI Tech CV 트랙내에서 진행된 대회이며 mAP50으로 최종평가를 진행하게 됩니다.
 
+## Final Score
+Public
+
+![Public](https://imgur.com/ckQP3BR.jpg)
+
+Private
+
+![private](https://imgur.com/MFEqSHw.jpg)
+
 ## Ground Rules
 ### [Conventional Commits 1.0.0](https://www.conventionalcommits.org/ko/v1.0.0/)
 ```bash
