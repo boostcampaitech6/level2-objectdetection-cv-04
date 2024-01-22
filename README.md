@@ -102,8 +102,7 @@ baseline
 │   
 ├── mmdetection
 │   ├── configs
-|   │   └── Outliers
-|   ├── work_dirs                                     #체크포인트가 저장되는 폴더입니다.
+|   │── custom_configs             # 실험한 configs 존재
 |   ├── experient_mmdetection_v3.ipynb
 |   ├── gradcam-faster-rcnn-C4-proposal.ipynb
 │   ├── metrics.py
