@@ -66,6 +66,9 @@ Private
 
 ![private](https://imgur.com/MFEqSHw.jpg)
 
+## Wrap-Up-Report
+[Wrap-Up-Report](https://synonymous-ton-89f.notion.site/Wrap-up-Reports-5992035b4c534bbfa84577dbbd39c536?pvs=4)
+
 ## Ground Rules
 ### [Conventional Commits 1.0.0](https://www.conventionalcommits.org/ko/v1.0.0/)
 ```bash
