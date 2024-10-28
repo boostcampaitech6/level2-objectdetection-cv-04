@@ -1,0 +1,19 @@
+# folders
+dataset
+KSH
+KSM
+SH
+LDH
+JBK
+CSH
+sample_submission
+
+# other libraries
+baseline/detectron2
+baseline/faster_rcnn
+
+# ignore .pyc
+*.pyc
+
+# ignore wandb
+baseline/mmdetection/wandb
